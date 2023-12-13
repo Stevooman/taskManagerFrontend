@@ -23,7 +23,8 @@
         <input 
           type="text" 
           :id="'update' + task.id"
-          placeholder="Update the task name">
+          placeholder="Update the task name"
+          @click="setDefaultUpdateText">
         <button 
           @click="updateTask(task.id)"
           class="update-btn"
@@ -34,7 +35,10 @@
     </div>
     <form @submit.prevent="addTask">
       <label for="new-task">New Task:</label>
-      <input type="text" id="new-task">
+      <input 
+        type="text" 
+        id="new-task"
+        @click="setDefaultUpdateText">
       <button>Add Task</button>
     </form>
     <div>
@@ -74,6 +78,7 @@ export default {
   methods: {
 
     startDrag(event, item) {
+      this.setDefaultUpdateText();
       event.dataTransfer.dropEffect = 'move';
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('taskId', item.id);
@@ -96,6 +101,12 @@ export default {
       taskTwo.priority = priorityOne;
       taskTwo.name = nameOne;
     },
+
+
+    setDefaultUpdateText() {
+      this.updateText = "Click and drag to adjust priority of tasks (top = most important)";
+    },
+
 
     /**
      * Populate the page with tasks
@@ -134,6 +145,8 @@ export default {
       } catch (e) {
         console.log(e);
       }
+
+      this.updateText = "Success!";
     },
 
 
@@ -158,6 +171,8 @@ export default {
       } catch (e) {
         console.log(e);
       }
+
+      this.updateText = "Success!";
     },
 
 
@@ -192,6 +207,8 @@ export default {
      * Delete a task from the database
      */
     async deleteTask(id) {
+      this.setDefaultUpdateText();
+
       try {
         const response = await axios.delete(this.deleteTaskUrl + id);
 
